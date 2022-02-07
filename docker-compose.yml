@@ -1,0 +1,122 @@
+version: '3.7'
+
+services:
+
+  currency-conversion:
+    image: currency-conversion-service:0.0.1-SNAPSHOT
+    deploy:
+      resources:
+        limits:
+          memory: 700M
+    ports:
+      - "8100:8100"
+    depends_on:
+      - spring-cloud-config
+      - eureka-service
+      - currency-exchange
+      - rabbitmq
+    networks:
+      - currency-network
+    environment:
+      SPRING.CONFIG.IMPORT: optional:configserver:http://spring-cloud-config:8888
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://eureka-service:8761/eureka
+      SPRING.ZIPKIN.BASEURL: http://zipkin-server:9411/
+      RABBIT_URI: amqp://guest:guest@rabbitmq:5672
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_ZIPKIN_SENDER_TYPE: rabbit
+
+  currency-exchange:
+    image: currency-exchange-service:0.0.1-SNAPSHOT
+    deploy:
+      resources:
+        limits:
+          memory: 700M
+    ports:
+      - "8000:8000"
+    depends_on:
+      - spring-cloud-config
+      - eureka-service
+      - rabbitmq
+    networks:
+      - currency-network
+    environment:
+      SPRING.CONFIG.IMPORT: optional:configserver:http://spring-cloud-config:8888
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://eureka-service:8761/eureka
+      SPRING.ZIPKIN.BASEURL: http://zipkin-server:9411/
+      RABBIT_URI: amqp://guest:guest@rabbitmq:5672
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_ZIPKIN_SENDER_TYPE: rabbit
+
+  api-gateway:
+    image: api-gateway:0.0.1-SNAPSHOT
+    deploy:
+      resources:
+        limits:
+          memory: 700M
+    ports:
+      - "8765:8765"
+    networks:
+      - currency-network
+    depends_on:
+      - eureka-service
+      - rabbitmq
+    environment:
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://eureka-service:8761/eureka
+      SPRING.ZIPKIN.BASEURL: http://zipkin-server:9411/
+      RABBIT_URI: amqp://guest:guest@rabbitmq:5672
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_ZIPKIN_SENDER_TYPE: rabbit
+
+  eureka-service:
+    image: eureka-service:0.0.1-SNAPSHOT
+    deploy:
+      resources:
+        limits:
+          memory: 700M
+    ports:
+      - "8761:8761"
+    networks:
+      - currency-network
+
+  spring-cloud-config:
+    image: spring-cloud-config-server:0.0.1-SNAPSHOT
+    deploy:
+      resources:
+        limits:
+          memory: 700M
+    ports:
+      - "8888:8888"
+    networks:
+      - currency-network
+
+  zipkin-server:
+    image: openzipkin/zipkin:2.23
+    deploy:
+      resources:
+        limits:
+          memory: 300M
+    ports:
+      - "9411:9411"
+    networks:
+      - currency-network
+    environment:
+      RABBIT_URI: amqp://guest:guest@rabbitmq:5672
+    depends_on:
+      - rabbitmq
+    restart: always
+
+  rabbitmq:
+    image: rabbitmq:3.8.12-management
+    deploy:
+      resources:
+        limits:
+          memory: 300M
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - currency-network
+
+
+networks:
+  currency-network:
