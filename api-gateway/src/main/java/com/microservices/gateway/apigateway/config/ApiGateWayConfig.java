@@ -17,7 +17,7 @@ public class ApiGateWayConfig {
                         .addRequestHeader("MyHeader", "MyURI")
                         .addRequestParameter("Param", "MyValue"))
                 .uri("http://httpbin.org:80"))
-                .route(p -> p.path("/currency/conversion/**")
+                .route(p -> p.path("/currency/conversion/**").and()
                         .uri("lb://currency-conversion"))
                 .route(p -> p.path("/currency-conversion-new/**")
                         .filters(f -> f.rewritePath(
