@@ -44,13 +44,9 @@ public class BrokerController {
     }
 
     @GetMapping("/risk")
-    public ResponseEntity<List<ShareDto>> findNeesShareForUser() {
+    public ResponseEntity<List<ShareDto>> findNeedShareForUser() {
         return ResponseEntity.ok(brokerService.findNeedFigiForUser());
     }
 
-    @GetMapping("/one")
-    public ResponseEntity<String> sendOneFigi() {
-        brokerService.findOneFigiForUser();
-        return ResponseEntity.ok("Send");
-    }
+
 }

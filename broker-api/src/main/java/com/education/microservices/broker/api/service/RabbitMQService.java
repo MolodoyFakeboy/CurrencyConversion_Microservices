@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,10 +26,6 @@ public class RabbitMQService {
     @Autowired
     @Qualifier("rabbitTemplate")
     private RabbitTemplate rabbitTemplate;
-
-    @Autowired
-    @Qualifier("rabbitTemplateTwo")
-    private RabbitTemplate rabbitTemplateTwo;
 
     @Autowired
     private ShareMapper shareMapper;
@@ -54,11 +49,4 @@ public class RabbitMQService {
         return objectMapper.readValue(answer, new TypeReference<>() {});
     }
 
-    @SneakyThrows
-    public void sendOneShare() {
-        var share = shareMapper.toDto(shareRepository.findByShortName("SBER")
-                .stream().findFirst().orElseThrow());
-        log.info("Send info about share");
-        rabbitTemplateTwo.convertAndSend(Collections.singleton(share));
-    }
 }

@@ -1,7 +1,5 @@
 package com.education.microservices.broker.api.config;
 
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -53,29 +51,10 @@ public class RabbitMQConfiguration {
         return new Queue(queryName);
     }
 
-    @Bean
-    public Queue anotherQueue() {
-        return new Queue("test1");
-    }
-
-    @Bean
-    public Queue moreQueue() {
-        return new Queue("test2");
-    }
 
     @Bean
     public FanoutExchange fanoutExchangeA() {
         return new FanoutExchange("exchange-example-3");
-    }
-
-    @Bean
-    public Binding binding1() {
-        return BindingBuilder.bind(anotherQueue()).to(fanoutExchangeA());
-    }
-
-    @Bean
-    public Binding binding2() {
-        return BindingBuilder.bind(moreQueue()).to(fanoutExchangeA());
     }
 
     @Bean

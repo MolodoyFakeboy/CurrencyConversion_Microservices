@@ -44,14 +44,5 @@ public class RabbitMQConfiguration {
         return new Jackson2JsonMessageConverter();
     }
 
-    @Bean
-    public Queue anotherQueue() {
-        return new Queue("test1");
-    }
-
-    @Bean
-    public Queue moreQueue() {
-        return new Queue("test2");
-    }
 
 }

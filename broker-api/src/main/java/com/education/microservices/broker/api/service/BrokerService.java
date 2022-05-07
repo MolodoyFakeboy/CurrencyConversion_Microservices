@@ -26,40 +26,18 @@ import static ru.tinkoff.piapi.core.utils.MapperUtils.quotationToBigDecimal;
 @RequiredArgsConstructor
 public class BrokerService {
 
-    private final InvestApi investApi;
-
     private final ShareRepository shareRepository;
-
     private final ShareMapper shareMapper;
-
     private final RabbitMQService rabbitMQService;
+    private final TinkoffApiService tinkoffApiService;
 
     public ShareDto findNeedFigiAndAddToMongo(String ticker) {
-        var share = findNeedRuFigiStock(ticker);
+        var share = tinkoffApiService.findNeedRuFigiStockByTicker(ticker);
         var stockFigi = share.getFigi();
-        var candleDay = getDayCandleForFigi(stockFigi);
+        var candleDay = tinkoffApiService.getDayCandleForFigi(stockFigi);
         var shareDto = buildShareFormat(share,candleDay,stockFigi);
         saveToMongo(shareDto);
         return shareDto;
-    }
-
-    @SneakyThrows
-    private Share findNeedRuFigiStock(String ticker) {
-        return investApi.getInstrumentsService().getAllShares().get()
-                .stream()
-                .filter(share -> share.getTicker().equals(ticker.toUpperCase(Locale.ROOT)))
-                .filter(share -> share.getCurrency().equals("rub"))
-                .findFirst()
-                .orElseThrow(() -> NotFoundFigiException.builder()
-                        .addParam("Ticker", ticker)
-                        .message("Акция не найдена по названию").build());
-    }
-
-    private HistoricCandle getDayCandleForFigi(String stockFigi){
-        return investApi.getMarketDataService()
-                .getCandlesSync(stockFigi, Instant.now().minus(3, ChronoUnit.DAYS), Instant.now(), CandleInterval.CANDLE_INTERVAL_DAY)
-                .stream().findFirst()
-                .orElseThrow();
     }
 
     private ShareDto buildShareFormat(Share share, HistoricCandle historicCandle,String figi) {

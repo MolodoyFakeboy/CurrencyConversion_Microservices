@@ -3,13 +3,15 @@ package com.education.microservices.broker.api;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableRabbit
+@EnableScheduling
 @SpringBootApplication
-public class Application {
+public class BrokerApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
+		SpringApplication.run(BrokerApplication.class, args);
 	}
 
 }
