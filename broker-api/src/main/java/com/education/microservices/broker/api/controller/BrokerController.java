@@ -1,6 +1,7 @@
 package com.education.microservices.broker.api.controller;
 
 import com.education.microservices.broker.api.dto.ShareDto;
+import com.education.microservices.broker.api.model.ShareWithReference;
 import com.education.microservices.broker.api.service.BrokerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +47,11 @@ public class BrokerController {
     @GetMapping("/risk")
     public ResponseEntity<List<ShareDto>> findNeedShareForUser() {
         return ResponseEntity.ok(brokerService.findNeedFigiForUser());
+    }
+
+    @GetMapping("/name/reference/{ticker}")
+    public ResponseEntity<ShareWithReference> findReferenceByTicker(@PathVariable String ticker) {
+        return ResponseEntity.ok(brokerService.findShareWithReferenceByName(ticker.toUpperCase(Locale.ROOT)));
     }
 
 

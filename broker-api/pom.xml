@@ -66,6 +66,11 @@
 			<version>1.0-M6</version>
 		</dependency>
 		<dependency>
+			<groupId>org.mongojack</groupId>
+			<artifactId>mongojack</artifactId>
+			<version>4.5.0</version>
+		</dependency>
+		<dependency>
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct</artifactId>
 			<version>1.4.2.Final</version>

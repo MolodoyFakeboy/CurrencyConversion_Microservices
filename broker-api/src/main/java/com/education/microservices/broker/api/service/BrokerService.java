@@ -1,21 +1,16 @@
 package com.education.microservices.broker.api.service;
 
 import com.education.microservices.broker.api.dto.ShareDto;
-import com.education.microservices.broker.api.exception.NotFoundFigiException;
 import com.education.microservices.broker.api.mapper.ShareMapper;
+import com.education.microservices.broker.api.model.ShareWithReference;
 import com.education.microservices.broker.api.repository.ShareRepository;
+import com.education.microservices.broker.api.repository.ShareWithReferenceRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.tinkoff.piapi.contract.v1.CandleInterval;
 import ru.tinkoff.piapi.contract.v1.HistoricCandle;
 import ru.tinkoff.piapi.contract.v1.Share;
-import ru.tinkoff.piapi.core.InvestApi;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 import static ru.tinkoff.piapi.core.utils.DateUtils.timestampToString;
@@ -30,6 +25,7 @@ public class BrokerService {
     private final ShareMapper shareMapper;
     private final RabbitMQService rabbitMQService;
     private final TinkoffApiService tinkoffApiService;
+    private final ShareWithReferenceRepository shareWithReferenceRepository;
 
     public ShareDto findNeedFigiAndAddToMongo(String ticker) {
         var share = tinkoffApiService.findNeedRuFigiStockByTicker(ticker);
@@ -81,8 +77,8 @@ public class BrokerService {
         return rabbitMQService.sendNeedShare();
     }
 
-    public void findOneFigiForUser() {
-        rabbitMQService.sendOneShare();
+    public ShareWithReference findShareWithReferenceByName(String name){
+        return shareWithReferenceRepository.getByShortName(name);
     }
 
 }

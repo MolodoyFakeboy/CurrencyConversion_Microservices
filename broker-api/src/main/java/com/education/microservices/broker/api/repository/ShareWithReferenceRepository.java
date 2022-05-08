@@ -5,6 +5,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface ShareWithReferenceRepository extends MongoRepository<ShareWithReference, String> {
 
-    ShareWithReference getByFigi(String figi);
-
+    ShareWithReference getByShortName(String shortName);
 }
