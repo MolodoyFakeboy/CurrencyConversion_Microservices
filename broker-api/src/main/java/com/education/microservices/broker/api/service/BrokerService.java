@@ -1,15 +1,28 @@
 package com.education.microservices.broker.api.service;
 
 import com.education.microservices.broker.api.dto.ShareDto;
+import com.education.microservices.broker.api.dto.TopShareDto;
+import com.education.microservices.broker.api.exception.NotFoundFigiException;
 import com.education.microservices.broker.api.mapper.ShareMapper;
+import com.education.microservices.broker.api.model.Candle;
 import com.education.microservices.broker.api.model.ShareWithReference;
+import com.education.microservices.broker.api.repository.CandleRepository;
 import com.education.microservices.broker.api.repository.ShareRepository;
 import com.education.microservices.broker.api.repository.ShareWithReferenceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import ru.tinkoff.piapi.contract.v1.HistoricCandle;
 import ru.tinkoff.piapi.contract.v1.Share;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +39,11 @@ public class BrokerService {
     private final RabbitMQService rabbitMQService;
     private final TinkoffApiService tinkoffApiService;
     private final ShareWithReferenceRepository shareWithReferenceRepository;
+    private final MongoTemplate mongoTemplate;
+
+    private final CandleRepository candleRepository;
+
+    private final CandleUpdaterService candleUpdaterService;
 
     public ShareDto findNeedFigiAndAddToMongo(String ticker) {
         var share = tinkoffApiService.findNeedRuFigiStockByTicker(ticker);
@@ -79,6 +97,39 @@ public class BrokerService {
 
     public ShareWithReference findShareWithReferenceByName(String name){
         return shareWithReferenceRepository.getByShortName(name);
+    }
+
+    public List<TopShareDto> findTopOfTheDay(LocalDate date) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("time").regex(date.toString()));
+        var candles = mongoTemplate.find(query, Candle.class);
+
+        List<TopShareDto> topShares = new ArrayList<>();
+        candles.forEach(candle -> {
+            var openPrice = candle.getOpenPrice();
+
+            var percentOfGrowth = (candle.getClosePrice().subtract(openPrice))
+                    .divide(openPrice,3,RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100));
+
+            var shareName = shareWithReferenceRepository.getByCandleId(candle.getId())
+                    .stream().findFirst().orElseThrow(
+                            () -> NotFoundFigiException.builder()
+                            .message("Can not find Share by candle")
+                            .addParam("ID", candle.getId())
+                            .build()).getShortName();
+
+            var topShare = TopShareDto.builder()
+                    .percentOfGrowth(percentOfGrowth)
+                    .shortName(shareName)
+                    .build();
+
+            topShares.add(topShare);
+        });
+
+        return topShares.stream()
+                .sorted(Comparator.comparing(TopShareDto::getPercentOfGrowth).reversed())
+                .limit(5)
+                .collect(Collectors.toList());
     }
 
 }

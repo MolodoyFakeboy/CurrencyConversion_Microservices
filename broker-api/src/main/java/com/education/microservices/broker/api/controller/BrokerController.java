@@ -1,11 +1,11 @@
 package com.education.microservices.broker.api.controller;
 
 import com.education.microservices.broker.api.dto.ShareDto;
+import com.education.microservices.broker.api.dto.TopShareDto;
 import com.education.microservices.broker.api.model.ShareWithReference;
-import com.education.microservices.broker.api.repository.CandleRepository;
-import com.education.microservices.broker.api.repository.ShareWithReferenceRepository;
 import com.education.microservices.broker.api.service.BrokerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
+
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 @RestController
 @RequiredArgsConstructor
@@ -53,9 +56,12 @@ public class BrokerController {
 
     @GetMapping("/name/reference/{ticker}")
     public ResponseEntity<ShareWithReference> findReferenceByTicker(@PathVariable String ticker) {
-
-
         return ResponseEntity.ok(brokerService.findShareWithReferenceByName(ticker.toUpperCase(Locale.ROOT)));
+    }
+
+    @GetMapping("/day/top")
+    public ResponseEntity<List<TopShareDto>>findTopOfTheDay(@RequestParam @DateTimeFormat(iso = DATE) LocalDate date) {
+        return ResponseEntity.ok(brokerService.findTopOfTheDay(date));
     }
 
 

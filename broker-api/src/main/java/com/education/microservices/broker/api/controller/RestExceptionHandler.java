@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class RestExceptionHandler {
 
     @ExceptionHandler(NotFoundFigiException.class)
-    public ResponseEntity<ExResponse> handleNotFoundFigiException(NotFoundFigiException e) {
-        return new ResponseEntity<>(new ExResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<NotFoundFigiException> handleNotFoundFigiException(NotFoundFigiException e) {
+        return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)

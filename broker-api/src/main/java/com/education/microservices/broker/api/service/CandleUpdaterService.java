@@ -29,7 +29,7 @@ public class CandleUpdaterService {
     public void candleTaskExecutor(){
         var shares = shareWithReferenceRepository.findAll();
 
-        log.info("Начинаем обновление котировок текущий поток" + Thread.currentThread().getName());
+        log.info("Начинаем обновление котировок");
 
         shares.forEach(share -> {
             var stockFigi = share.getFigi();
@@ -47,7 +47,7 @@ public class CandleUpdaterService {
 
             shareWithReferenceRepository.save(share);
         });
-
+        log.info("Закончил обновление");
     }
 
     private Candle buildCandle(HistoricCandle historicCandle) {

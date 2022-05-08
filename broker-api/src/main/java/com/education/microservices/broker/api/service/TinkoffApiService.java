@@ -33,7 +33,7 @@ public class TinkoffApiService {
 
     public HistoricCandle getDayCandleForFigi(String stockFigi) {
         return investApi.getMarketDataService()
-                .getCandlesSync(stockFigi, Instant.now().minus(3, ChronoUnit.DAYS), Instant.now(), CandleInterval.CANDLE_INTERVAL_DAY)
+                .getCandlesSync(stockFigi, Instant.now().minus(1, ChronoUnit.DAYS), Instant.now(), CandleInterval.CANDLE_INTERVAL_DAY)
                 .stream().findFirst()
                 .orElse(null);
     }
