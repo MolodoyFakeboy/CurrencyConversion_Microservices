@@ -6,7 +6,6 @@ import com.education.microservices.broker.api.exception.NotFoundFigiException;
 import com.education.microservices.broker.api.mapper.ShareMapper;
 import com.education.microservices.broker.api.model.Candle;
 import com.education.microservices.broker.api.model.ShareWithReference;
-import com.education.microservices.broker.api.repository.CandleRepository;
 import com.education.microservices.broker.api.repository.ShareRepository;
 import com.education.microservices.broker.api.repository.ShareWithReferenceRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,10 +39,6 @@ public class BrokerService {
     private final TinkoffApiService tinkoffApiService;
     private final ShareWithReferenceRepository shareWithReferenceRepository;
     private final MongoTemplate mongoTemplate;
-
-    private final CandleRepository candleRepository;
-
-    private final CandleUpdaterService candleUpdaterService;
 
     public ShareDto findNeedFigiAndAddToMongo(String ticker) {
         var share = tinkoffApiService.findNeedRuFigiStockByTicker(ticker);
