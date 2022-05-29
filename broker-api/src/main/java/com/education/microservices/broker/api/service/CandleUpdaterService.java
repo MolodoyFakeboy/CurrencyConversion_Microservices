@@ -4,7 +4,6 @@ import com.education.microservices.broker.api.model.Candle;
 import com.education.microservices.broker.api.repository.CandleRepository;
 import com.education.microservices.broker.api.repository.ShareWithReferenceRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -25,7 +24,6 @@ public class CandleUpdaterService {
     private final TinkoffApiService tinkoffApiService;
 
     @Scheduled(cron = "${crone.expression.value}")
-    @SneakyThrows
     public void candleTaskExecutor(){
         var shares = shareWithReferenceRepository.findAll();
 

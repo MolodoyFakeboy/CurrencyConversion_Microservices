@@ -1,4 +1,4 @@
-package com.user.account.config;
+package com.rabbit.study.config;
 
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Value;

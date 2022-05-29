@@ -5,6 +5,7 @@ import com.education.microservices.broker.api.mapper.ShareMapper;
 import com.education.microservices.broker.api.repository.ShareRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;

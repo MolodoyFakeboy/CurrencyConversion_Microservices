@@ -1,4 +1,4 @@
-package com.user.account.dto;
+package com.rabbit.study.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

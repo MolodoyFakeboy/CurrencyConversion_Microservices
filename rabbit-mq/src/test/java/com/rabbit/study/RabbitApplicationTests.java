@@ -1,10 +1,10 @@
-package com.user.account;
+package com.rabbit.study;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AccountApplicationTests {
+class RabbitApplicationTests {
 
 	@Test
 	void contextLoads() {

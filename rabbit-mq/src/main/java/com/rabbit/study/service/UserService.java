@@ -1,4 +1,4 @@
-package com.user.account.service;
+package com.rabbit.study.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -29,7 +29,7 @@ public class AsyncConfiguration implements AsyncConfigurer {
     public AsyncTaskExecutor getAsyncExecutor() {
         var executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(10);
-        executor.setMaxPoolSize(20);
+        executor.setMaxPoolSize(5);
         executor.setQueueCapacity(35);
         return executor;
     }
