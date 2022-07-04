@@ -8,9 +8,8 @@ import org.springframework.amqp.rabbit.annotation.Exchange;
 import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.QueueBinding;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import static com.rabbit.study.service.TaskInitializer.SERVICE_ID;
 
 @Component
 @Slf4j
@@ -20,6 +19,9 @@ public class TaskListener {
     protected static final String TASK_QUEUE = "task.queue";
     protected static final String TASK_EXCHANGE = "task.exchange";
 
+    @Value("${server.port}")
+    public Integer servicePort;
+
     @SneakyThrows
     @RabbitListener(
             bindings = @QueueBinding(
@@ -28,10 +30,11 @@ public class TaskListener {
             )
     )
     public void handleTask(Task task) {
-        Thread.sleep(5000);
+        Thread.sleep(15000);
+
         log.info(String.format(
                 "Service \"%s\" start process task \"%s\", from service \"%s\" ",
-                SERVICE_ID,
+                servicePort,
                 task.getId(),
                 task.getFrom())
         );

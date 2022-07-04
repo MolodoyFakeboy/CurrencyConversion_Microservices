@@ -14,6 +14,6 @@ import java.io.Serializable;
 public class Task implements Serializable {
 
     private String id;
-    private String from;
+    private int from;
     private long number;
 }

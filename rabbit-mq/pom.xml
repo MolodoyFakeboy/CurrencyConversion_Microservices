@@ -8,10 +8,10 @@
 		<version>2.6.2</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>rsbbit.study</groupId>
-	<artifactId>rabbit</artifactId>
+	<groupId>com.rabbit.study</groupId>
+	<artifactId>rabbit-mq</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>rabbit</name>
+	<name>rabbit-mq</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>13</java.version>
